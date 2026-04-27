@@ -50,11 +50,15 @@ export const getProductById = async (req, res) => {
 // Actualizar
 export const updateProduct = async (req, res) => {
     try {
+        if (req.body.sku) {
+            delete req.body.sku
+        }
         const product = await Product.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true }
         )
+
 
         if (!product) {
             return res.status(404).json({ message: 'Producto no encontrado' })
