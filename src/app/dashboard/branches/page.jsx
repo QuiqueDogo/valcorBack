@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import BranchTable from '@/components/branches/BranchTable'
 import BranchModal from '@/components/branches/BranchModal'
 
@@ -24,6 +24,15 @@ export default function BranchesPage() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(values)
+        }).then(async (res) => {
+            const data = await res.json()
+            if (!res.ok) {
+                message.error(data.message)
+            } else {
+                message.success(data.message)
+            }
+        }).catch((error) => {
+            console.error(error)
         })
 
         setOpen(false)

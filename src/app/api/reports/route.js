@@ -8,8 +8,11 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url)
     const from = searchParams.get('from')
     const to = searchParams.get('to')
+    const status = searchParams.get('status')
 
-    const match = {}
+    const match = {
+        status: status || 'processed'
+    }
 
     if (from && to) {
         match.createdAt = {

@@ -17,6 +17,15 @@ export default function MovementsPage() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(values)
+        }).then(async (res) => {
+            const data = await res.json()
+            if (!res.ok) {
+                message.error(data.message)
+            } else {
+                message.success(data.message)
+            }
+        }).catch((error) => {
+            console.error(error)
         })
 
         setOpen(false)

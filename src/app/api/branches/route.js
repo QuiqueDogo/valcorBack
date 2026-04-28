@@ -11,16 +11,43 @@ export async function GET() {
 
 // POST
 export async function POST(req) {
-    await connectDB()
-    const body = await req.json()
+    try {
+        await connectDB()
+        const body = await req.json()
 
-    if (!body.name) {
+        const { name, location } = body
+
+        if (!name) {
+            return NextResponse.json(
+                { message: 'Nombre requerido' },
+                { status: 400 }
+            )
+        }
+
+        const normalizedName = name.trim().toLowerCase()
+
+        const exists = await Branch.findOne({
+            name: { $regex: new RegExp(`^${normalizedName}$`, 'i') }
+        })
+
+        if (exists) {
+            return NextResponse.json(
+                { message: 'La sucursal ya existe' },
+                { status: 400 }
+            )
+        }
+
+        const branch = await Branch.create({
+            name: name.trim(),
+            location
+        })
+
+        return NextResponse.json(branch, { status: 201 })
+
+    } catch (error) {
         return NextResponse.json(
-            { message: 'Nombre requerido' },
-            { status: 400 }
+            { message: error.message },
+            { status: 500 }
         )
     }
-
-    const branch = await Branch.create(body)
-    return NextResponse.json(branch, { status: 201 })
 }

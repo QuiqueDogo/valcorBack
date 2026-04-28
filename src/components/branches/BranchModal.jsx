@@ -20,7 +20,7 @@ export default function BranchModal({ open, onClose, onSubmit }) {
                 <Form.Item
                     name="name"
                     label="Nombre"
-                    rules={[{ required: true }]}
+                    rules={[{ required: true, message: 'Por favor ingrese un nombre' }]}
                 >
                     <Input />
                 </Form.Item>

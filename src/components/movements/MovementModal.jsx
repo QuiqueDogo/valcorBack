@@ -1,6 +1,6 @@
 'use client'
 
-import { Modal, Form, InputNumber, Select } from 'antd'
+import { Modal, Form, InputNumber, Select, message } from 'antd'
 import { useEffect, useState } from 'react'
 
 export default function MovementModal({ open, onClose, onSubmit }) {
@@ -23,7 +23,7 @@ export default function MovementModal({ open, onClose, onSubmit }) {
             .then(setBranches)
     }, [])
     useEffect(() => {
-        if (type === 'OUT' && productId && fromBranchId) {
+        if ((type === 'OUT' || type === 'TRANSFER') && productId && fromBranchId) {
             fetch(`/api/stock/available?productId=${productId}&branchId=${fromBranchId}`)
                 .then(r => r.json())
                 .then(data => setAvailableStock(data.quantity))
@@ -77,7 +77,7 @@ export default function MovementModal({ open, onClose, onSubmit }) {
                     <Form.Item
                         name="fromBranchId"
                         label="Sucursal origen"
-                        rules={[{ required: type !== 'IN' }]}
+                        rules={[{ required: type !== 'IN', message: 'Por favor seleccione la sucursal origen' }]}
                     >
                         <Select
                             options={branches.map(b => ({
@@ -88,16 +88,18 @@ export default function MovementModal({ open, onClose, onSubmit }) {
                     </Form.Item>
                 )}
 
-                {type === 'OUT' && fromBranchId && (
+                {(type === 'OUT' || type === 'TRANSFER') && fromBranchId && (
                     <div style={{ marginBottom: 10 }}>
-                        Stock disponible: <b>{availableStock}</b>
+                        Stock disponible: <b style={{ color: availableStock === 0 ? 'red' : 'inherit' }}>
+                            {availableStock}
+                        </b>
                     </div>
                 )}
                 {type !== 'OUT' && (
                     <Form.Item
                         name="toBranchId"
                         label="Sucursal destino"
-                        rules={[{ required: type !== 'OUT' }]}
+                        rules={[{ required: type !== 'OUT', message: 'Por favor ingrese una sucursal destino' }]}
                     >
                         <Select
                             options={branches.map(b => ({
@@ -111,12 +113,20 @@ export default function MovementModal({ open, onClose, onSubmit }) {
                     name="quantity"
                     label="Cantidad"
                     rules={[
-                        { required: true },
+                        { required: true, message: 'Por favor ingrese una cantidad' },
                         {
                             validator(_, value) {
-                                if (type === 'OUT' && value > availableStock) {
-                                    return Promise.reject('No hay stock suficiente en la sucursal')
+                                if (type === 'TRANSFER') {
+                                    const toBranchId = form.getFieldValue('toBranchId')
+                                    if (value && fromBranchId && toBranchId && fromBranchId === toBranchId) {
+                                        return message.error('No puedes transferir a la misma sucursal')
+                                    }
                                 }
+
+                                if ((type === 'OUT' || type === 'TRANSFER') && value > availableStock) {
+                                    return message.error('No hay stock suficiente en la sucursal')
+                                }
+
                                 return Promise.resolve()
                             }
                         }

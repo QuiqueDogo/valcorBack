@@ -17,15 +17,15 @@ export default function ProductModal({ open, onClose, onSubmit }) {
             onOk={handleOk}
         >
             <Form layout="vertical" form={form}>
-                <Form.Item name="sku" label="SKU" rules={[{ required: true }]}>
+                <Form.Item name="sku" label="SKU" rules={[{ required: true, message: 'Por favor ingrese un SKU' }]}>
                     <Input />
                 </Form.Item>
 
-                <Form.Item name="name" label="Nombre" rules={[{ required: true }]}>
+                <Form.Item name="name" label="Nombre" rules={[{ required: true, message: 'Por favor ingrese un nombre' }]}>
                     <Input />
                 </Form.Item>
 
-                <Form.Item name="price" label="Precio" rules={[{ required: true }]}>
+                <Form.Item name="price" label="Precio" rules={[{ required: true, message: 'Por favor ingrese un precio' }]}>
                     <InputNumber style={{ width: '100%' }} />
                 </Form.Item>
 
