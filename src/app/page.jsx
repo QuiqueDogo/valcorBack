@@ -1,54 +1,43 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Table, Button, Modal, Form, Input, InputNumber } from 'antd'
+import { Button } from 'antd'
+
+import ProductTable from '@/components/products/ProductTable'
+import ProductModal from '@/components/products/ProductModal'
+import StockTable from '@/components/stock/StockTable'
+import MovementTable from '@/components/movements/MovementTable'
+import MovementFilter from '@/components/movements/MovementFilter'
+import ReportTable from '@/components/reports/ReportTable'
+import ProcessWorkerButton from '@/components/shared/ProcessWorkerButton'
 
 export default function Page() {
-  const [data, setData] = useState([])
+  const [products, setProducts] = useState([])
+  const [stock, setStock] = useState([])
+  const [movements, setMovements] = useState([])
+  const [report, setReport] = useState([])
   const [open, setOpen] = useState(false)
-  const [form] = Form.useForm()
+  const [status, setStatus] = useState()
 
-  const [branches, setBranches] = useState([])
-  const [openBranch, setOpenBranch] = useState(false)
-  const [formBranch] = Form.useForm()
+  const fetchAll = async () => {
+    const [p, s, m, r] = await Promise.all([
+      fetch('/api/products').then(r => r.json()),
+      fetch('/api/stock').then(r => r.json()),
+      fetch('/api/movements').then(r => r.json()),
+      fetch('/api/reports').then(r => r.json())
+    ])
 
-  const fetchBranches = async () => {
-    const res = await fetch('/api/branches', { cache: 'no-store' })
-    const data = await res.json()
-    setBranches(data)
+    setProducts(p)
+    setStock(s)
+    setMovements(m)
+    setReport(r)
   }
 
   useEffect(() => {
-    fetchBranches()
+    fetchAll()
   }, [])
 
-  const handleCreateBranch = async () => {
-    const values = await formBranch.validateFields()
-
-    await fetch('/api/branches', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values)
-    })
-
-    setOpenBranch(false)
-    formBranch.resetFields()
-    fetchBranches()
-  }
-
-  const fetchData = async () => {
-    const res = await fetch('/api/products', { cache: 'no-store' })
-    const json = await res.json()
-    setData(json)
-  }
-
-  useEffect(() => {
-    fetchData()
-  }, [])
-
-  const handleCreate = async () => {
-    const values = await form.validateFields()
-
+  const handleCreate = async (values) => {
     await fetch('/api/products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -56,8 +45,7 @@ export default function Page() {
     })
 
     setOpen(false)
-    form.resetFields()
-    fetchData()
+    fetchAll()
   }
 
   return (
@@ -66,35 +54,22 @@ export default function Page() {
         Nuevo producto
       </Button>
 
-      <Table
-        style={{ marginTop: 20 }}
-        dataSource={data}
-        rowKey="_id"
-        columns={[
-          { title: 'SKU', dataIndex: 'sku' },
-          { title: 'Nombre', dataIndex: 'name' },
-          { title: 'Precio', dataIndex: 'price' }
-        ]}
-      />
+      <ProcessWorkerButton />
 
-      <Modal
-        title="Crear producto"
+      <MovementFilter onChange={setStatus} />
+
+      <ProductTable data={products} />
+      <StockTable data={stock} />
+      <MovementTable
+        data={status ? movements.filter(m => m.status === status) : movements}
+      />
+      <ReportTable data={report} />
+
+      <ProductModal
         open={open}
-        onCancel={() => setOpen(false)}
-        onOk={handleCreate}
-      >
-        <Form layout="vertical" form={form}>
-          <Form.Item name="sku" label="SKU" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="name" label="Nombre" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="price" label="Precio" rules={[{ required: true }]}>
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-        </Form>
-      </Modal>
+        onClose={() => setOpen(false)}
+        onSubmit={handleCreate}
+      />
     </>
   )
 }
