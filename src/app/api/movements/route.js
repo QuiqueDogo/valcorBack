@@ -26,7 +26,17 @@ export async function POST(req) {
             { status: 400 }
         )
     }
+    if (type === 'IN' && !body.toBranchId) {
+        return NextResponse.json({ message: 'Destino requerido' }, { status: 400 })
+    }
 
+    if (type === 'OUT' && !body.fromBranchId) {
+        return NextResponse.json({ message: 'Origen requerido' }, { status: 400 })
+    }
+
+    if (type === 'TRANSFER' && (!body.fromBranchId || !body.toBranchId)) {
+        return NextResponse.json({ message: 'Origen y destino requeridos' }, { status: 400 })
+    }
     const movement = await Movement.create({
         ...body,
         status: 'pending',

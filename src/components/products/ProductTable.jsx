@@ -11,7 +11,23 @@ export default function ProductTable({ data, loading }) {
                 { title: 'SKU', dataIndex: 'sku' },
                 { title: 'Nombre', dataIndex: 'name' },
                 { title: 'Precio', dataIndex: 'price' },
-                { title: 'Categoría', dataIndex: 'category' }
+                { title: 'Categoría', dataIndex: 'category' },
+                {
+                    title: 'Stock Total',
+                    dataIndex: 'totalStock'
+                },
+                {
+                    title: 'Por sucursal',
+                    render: (row) => (
+                        <>
+                            {row.stockByBranch?.map((s, i) => (
+                                <div key={i}>
+                                    {s.branch}: {s.quantity}
+                                </div>
+                            ))}
+                        </>
+                    )
+                }
             ]}
         />
     )
