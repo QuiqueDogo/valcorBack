@@ -5,15 +5,15 @@ export default function ReportTable({ data }) {
         <Table
             title={() => 'Reporte'}
             dataSource={data}
-            rowKey={(row, i) => i}
+            rowKey={(record) => `${record.type}-${record.branch}`}
             columns={[
                 {
                     title: 'Tipo',
-                    render: (row) => row._id.type
+                    render: (row) => row.type
                 },
                 {
                     title: 'Sucursal',
-                    render: (row) => row._id.branch || 'N/A'
+                    render: (row) => row.branch || 'N/A'
                 },
                 {
                     title: 'Total',

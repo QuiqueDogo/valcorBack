@@ -20,13 +20,51 @@ export async function GET(req) {
 
     const report = await Movement.aggregate([
         { $match: match },
+
+        {
+            $addFields: {
+                branch: {
+                    $cond: [
+                        { $eq: ['$type', 'IN'] },
+                        '$toBranchId',
+                        '$fromBranchId'
+                    ]
+                }
+            }
+        },
+
         {
             $group: {
                 _id: {
                     type: '$type',
-                    branch: '$fromBranchId'
+                    branch: '$branch'
                 },
                 total: { $sum: '$quantity' }
+            }
+        },
+
+        {
+            $lookup: {
+                from: 'branches',
+                localField: '_id.branch',
+                foreignField: '_id',
+                as: 'branch'
+            }
+        },
+
+        {
+            $unwind: {
+                path: '$branch',
+                preserveNullAndEmptyArrays: true
+            }
+        },
+
+        {
+            $project: {
+                _id: 0,
+                type: '$_id.type',
+                branch: '$branch.name',
+                total: 1
             }
         }
     ])

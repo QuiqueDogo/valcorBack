@@ -5,9 +5,13 @@ import { useEffect, useState } from 'react'
 
 export default function MovementModal({ open, onClose, onSubmit }) {
     const [form] = Form.useForm()
-    const type = Form.useWatch('type', form)
     const [products, setProducts] = useState([])
     const [branches, setBranches] = useState([])
+
+    const type = Form.useWatch('type', form)
+    const productId = Form.useWatch('productId', form)
+    const fromBranchId = Form.useWatch('fromBranchId', form)
+    const [availableStock, setAvailableStock] = useState(0)
 
     useEffect(() => {
         fetch('/api/products')
@@ -18,6 +22,15 @@ export default function MovementModal({ open, onClose, onSubmit }) {
             .then(r => r.json())
             .then(setBranches)
     }, [])
+    useEffect(() => {
+        if (type === 'OUT' && productId && fromBranchId) {
+            fetch(`/api/stock/available?productId=${productId}&branchId=${fromBranchId}`)
+                .then(r => r.json())
+                .then(data => setAvailableStock(data.quantity))
+        } else {
+            setAvailableStock(0)
+        }
+    }, [type, productId, fromBranchId])
 
     const handleOk = async () => {
         const values = await form.validateFields()
@@ -75,6 +88,11 @@ export default function MovementModal({ open, onClose, onSubmit }) {
                     </Form.Item>
                 )}
 
+                {type === 'OUT' && fromBranchId && (
+                    <div style={{ marginBottom: 10 }}>
+                        Stock disponible: <b>{availableStock}</b>
+                    </div>
+                )}
                 {type !== 'OUT' && (
                     <Form.Item
                         name="toBranchId"
@@ -89,7 +107,21 @@ export default function MovementModal({ open, onClose, onSubmit }) {
                         />
                     </Form.Item>
                 )}
-                <Form.Item name="quantity" label="Cantidad" rules={[{ required: true }]}>
+                <Form.Item
+                    name="quantity"
+                    label="Cantidad"
+                    rules={[
+                        { required: true },
+                        {
+                            validator(_, value) {
+                                if (type === 'OUT' && value > availableStock) {
+                                    return Promise.reject('No hay stock suficiente en la sucursal')
+                                }
+                                return Promise.resolve()
+                            }
+                        }
+                    ]}
+                >
                     <InputNumber style={{ width: '100%' }} />
                 </Form.Item>
 
