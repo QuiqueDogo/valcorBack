@@ -2,10 +2,10 @@
 ## 🚀 Demo
 
 👉 Frontend (Vercel):  
-https://TU-URL.vercel.app
+https://valcor-back.vercel.app/login
 
 👉 Repositorio:  
-https://github.com/TU-USUARIO/stockflow
+https://github.com/QuiqueDogo/valcorBack
 
 ---
 
