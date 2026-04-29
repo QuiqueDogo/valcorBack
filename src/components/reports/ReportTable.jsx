@@ -6,6 +6,7 @@ export default function ReportTable({ data }) {
             title={() => 'Reporte'}
             dataSource={data}
             rowKey={(record) => `${record.type}-${record.branch}`}
+            scroll={{ x: 'max-content' }}
             columns={[
                 {
                     title: 'Tipo',

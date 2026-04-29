@@ -1,8 +1,9 @@
 import { Button, message } from 'antd'
+import { apiFetch } from '@/lib/api'
 
 export default function ProcessWorkerButton({ onDone }) {
     const handleClick = async () => {
-        await fetch('/api/worker')
+        await apiFetch('/api/worker')
         message.success('Procesamiento ejecutado')
 
         if (onDone) {

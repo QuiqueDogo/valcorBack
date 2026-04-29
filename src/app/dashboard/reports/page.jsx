@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import ReportTable from '@/components/reports/ReportTable'
 import ReportChart from '@/components/reports/ReportChart'
-import { DatePicker, Button, Tabs, Badge, Spin } from 'antd'
+import { DatePicker, Button, Tabs, Badge, Spin, Flex } from 'antd'
+import { apiFetch } from '@/lib/api'
 
 const { RangePicker } = DatePicker
 
@@ -25,8 +26,7 @@ export default function ReportsPage() {
                 url += `&from=${from}&to=${to}`
             }
 
-            const res = await fetch(url)
-            const json = await res.json()
+            const json = await apiFetch(url)
 
             setData(json)
         } catch (error) {
@@ -71,16 +71,15 @@ export default function ReportsPage() {
     const chartData = transformData(data)
 
     return (
-        <>
+        <Flex vertical gap="middle">
             {/* 🔹 filtros */}
-            <div style={{ marginBottom: 16, display: 'flex', gap: 10 }}>
-                <RangePicker onChange={(dates) => setRange(dates)} />
+            <Flex gap="small" wrap="wrap">
+                <RangePicker onChange={(dates) => setRange(dates)} style={{ flex: 1, minWidth: 280 }} />
 
-                {/* opcional si quieres mantener botón */}
                 <Button type="primary" onClick={fetchData}>
                     Generar reporte
                 </Button>
-            </div>
+            </Flex>
 
             {/* 🔹 contenido */}
             <Spin spinning={loading}>
@@ -99,10 +98,10 @@ export default function ReportsPage() {
                                 </span>
                             ),
                             children: (
-                                <>
+                                <Flex vertical gap="large">
                                     <ReportTable data={inData} />
                                     <ReportChart data={chartData} />
-                                </>
+                                </Flex>
                             )
                         },
                         {
@@ -118,10 +117,10 @@ export default function ReportsPage() {
                                 </span>
                             ),
                             children: (
-                                <>
+                                <Flex vertical gap="large">
                                     <ReportTable data={outData} />
                                     <ReportChart data={chartData} />
-                                </>
+                                </Flex>
                             )
                         },
                         {
@@ -137,15 +136,15 @@ export default function ReportsPage() {
                                 </span>
                             ),
                             children: (
-                                <>
+                                <Flex vertical gap="large">
                                     <ReportTable data={transferData} />
                                     <ReportChart data={chartData} />
-                                </>
+                                </Flex>
                             )
                         }
                     ]}
                 />
             </Spin>
-        </>
+        </Flex>
     )
 }

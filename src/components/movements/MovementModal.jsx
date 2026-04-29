@@ -2,6 +2,7 @@
 
 import { Modal, Form, InputNumber, Select, message } from 'antd'
 import { useEffect, useState } from 'react'
+import { apiFetch } from '@/lib/api'
 
 export default function MovementModal({ open, onClose, onSubmit }) {
     const [form] = Form.useForm()
@@ -14,18 +15,15 @@ export default function MovementModal({ open, onClose, onSubmit }) {
     const [availableStock, setAvailableStock] = useState(0)
 
     useEffect(() => {
-        fetch('/api/products')
-            .then(r => r.json())
+        apiFetch('/api/products')
             .then(setProducts)
 
-        fetch('/api/branches')
-            .then(r => r.json())
+        apiFetch('/api/branches')
             .then(setBranches)
     }, [])
     useEffect(() => {
         if ((type === 'OUT' || type === 'TRANSFER') && productId && fromBranchId) {
-            fetch(`/api/stock/available?productId=${productId}&branchId=${fromBranchId}`)
-                .then(r => r.json())
+            apiFetch(`/api/stock/available?productId=${productId}&branchId=${fromBranchId}`)
                 .then(data => setAvailableStock(data.quantity))
         } else {
             setAvailableStock(0)

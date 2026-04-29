@@ -1,18 +1,23 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Button } from 'antd'
+import { Button, message, Flex } from 'antd'
 import ProductTable from '@/components/products/ProductTable'
 import ProductModal from '@/components/products/ProductModal'
+import { apiFetch } from '@/lib/api'
 
 export default function ProductsPage() {
     const [data, setData] = useState([])
     const [open, setOpen] = useState(false)
 
     const fetchData = async () => {
-        const res = await fetch('/api/products/with-stock')
-        const json = await res.json()
-        setData(json)
+        try {
+            const json = await apiFetch('/api/products/with-stock')
+            setData(json)
+        } catch (err) {
+            console.log(err)
+            message.error('Error al cargar los productos')
+        }
     }
 
     useEffect(() => {
@@ -20,9 +25,8 @@ export default function ProductsPage() {
     }, [])
 
     const handleCreate = async (values) => {
-        await fetch('/api/products', {
+        await apiFetch('/api/products', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(values)
         })
 
@@ -31,10 +35,12 @@ export default function ProductsPage() {
     }
 
     return (
-        <>
-            <Button type="primary" onClick={() => setOpen(true)}>
-                Nuevo producto
-            </Button>
+        <Flex vertical gap="middle">
+            <Flex justify="flex-start">
+                <Button type="primary" onClick={() => setOpen(true)}>
+                    Nuevo producto
+                </Button>
+            </Flex>
 
             <ProductTable data={data} />
 
@@ -43,6 +49,6 @@ export default function ProductsPage() {
                 onClose={() => setOpen(false)}
                 onSubmit={handleCreate}
             />
-        </>
+        </Flex>
     )
 }

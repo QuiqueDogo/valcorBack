@@ -4,29 +4,27 @@ import { useEffect, useState } from 'react'
 import MovementTable from '@/components/movements/MovementTable'
 import MovementFilter from '@/components/movements/MovementFilter'
 import ProcessWorkerButton from '@/components/shared/ProcessWorkerButton'
-import { Button, message } from 'antd'
+import { Button, message, Flex } from 'antd'
 import MovementModal from '@/components/movements/MovementModal'
+import { apiFetch } from '@/lib/api'
 
 export default function MovementsPage() {
 
 
     const handleCreate = async (values) => {
-        await fetch('/api/movements', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(values)
-        }).then(async (res) => {
-            const data = await res.json()
-            if (!res.ok) {
-                message.error(data.message)
-            } else {
+        try {
+            const data = await apiFetch('/api/movements', {
+                method: 'POST',
+                body: JSON.stringify(values)
+            })
+
+            if (data && data.message) {
                 message.success(data.message)
             }
-        }).catch((error) => {
+        } catch (error) {
             console.error(error)
-        })
+            message.error('Error al crear el movimiento')
+        }
 
         setOpen(false)
         fetchData()
@@ -36,8 +34,7 @@ export default function MovementsPage() {
     const [open, setOpen] = useState(false)
 
     const fetchData = async () => {
-        const res = await fetch('/api/movements')
-        const json = await res.json()
+        const json = await apiFetch('/api/movements')
         setData(json)
     }
 
@@ -50,19 +47,23 @@ export default function MovementsPage() {
         : data
 
     return (
-        <>
+        <Flex vertical gap="middle">
+            <Flex gap="small" wrap="wrap" justify="space-between" align="center">
+                <Flex gap="small" wrap="wrap">
+                    <Button type="primary" onClick={() => setOpen(true)}>
+                        Nuevo movimiento
+                    </Button>
+                    <ProcessWorkerButton onDone={fetchData} />
+                </Flex>
+                <MovementFilter onChange={setStatus} />
+            </Flex>
 
-            <Button type="primary" onClick={() => setOpen(true)}>
-                Nuevo movimiento
-            </Button>
-            <ProcessWorkerButton onDone={fetchData} />
-            <MovementFilter onChange={setStatus} />
             <MovementTable data={filtered} />
             <MovementModal
                 open={open}
                 onClose={() => setOpen(false)}
                 onSubmit={handleCreate}
             />
-        </>
+        </Flex>
     )
 }

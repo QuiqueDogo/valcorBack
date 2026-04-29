@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server'
 import { connectDB } from '@/lib/db'
+
+
+import '@/models'
+
+
 import Product from '@/models/Product'
 import Stock from '@/models/Stock'
+
 
 export async function GET() {
     await connectDB()
 
     const products = await Product.find()
-    const stock = await Stock.find()
-        .populate('branchId')
+    const stock = await Stock.find().populate('branchId')
 
     const result = products.map(product => {
         const productStock = stock.filter(

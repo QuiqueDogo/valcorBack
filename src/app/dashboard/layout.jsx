@@ -1,19 +1,25 @@
 'use client'
 
-import { Layout, Menu } from 'antd'
+import { Layout, Menu, Button, theme } from 'antd'
 import {
     AppstoreOutlined,
     ShopOutlined,
     SwapOutlined,
-    BarChartOutlined
+    BarChartOutlined,
+    MenuOutlined
 } from '@ant-design/icons'
 import { useRouter, usePathname } from 'next/navigation'
+import { useState } from 'react'
 
-const { Sider, Content } = Layout
+const { Sider, Content, Header } = Layout
 
 export default function DashboardLayout({ children }) {
     const router = useRouter()
     const pathname = usePathname()
+    const [collapsed, setCollapsed] = useState(false)
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken()
 
     const items = [
         {
@@ -40,8 +46,27 @@ export default function DashboardLayout({ children }) {
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
-            <Sider>
-                <div style={{ color: '#fff', padding: 16 }}>
+            <Sider
+                breakpoint="lg"
+                collapsedWidth="0"
+                onBreakpoint={(broken) => {
+                    setCollapsed(broken)
+                }}
+                onCollapse={(value) => setCollapsed(value)}
+                collapsed={collapsed}
+                trigger={null}
+            >
+                <div style={{
+                    height: 32,
+                    margin: 16,
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    borderRadius: 4
+                }}>
                     StockFlow
                 </div>
 
@@ -55,7 +80,26 @@ export default function DashboardLayout({ children }) {
             </Sider>
 
             <Layout>
-                <Content style={{ padding: 24 }}>
+                <Header style={{ padding: 0, background: colorBgContainer, display: 'flex', alignItems: 'center' }}>
+                    <Button
+                        type="text"
+                        icon={<MenuOutlined />}
+                        onClick={() => setCollapsed(!collapsed)}
+                        style={{
+                            fontSize: '16px',
+                            width: 64,
+                            height: 64,
+                        }}
+                    />
+                </Header>
+                <Content style={{
+                    margin: '24px 16px',
+                    padding: 24,
+                    minHeight: 280,
+                    background: colorBgContainer,
+                    borderRadius: 8,
+                    overflow: 'initial'
+                }}>
                     {children}
                 </Content>
             </Layout>

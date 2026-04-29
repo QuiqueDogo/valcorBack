@@ -7,6 +7,7 @@ export default function ProductTable({ data, loading }) {
             dataSource={data}
             loading={loading}
             rowKey="_id"
+            scroll={{ x: 'max-content' }}
             columns={[
                 { title: 'SKU', dataIndex: 'sku' },
                 { title: 'Nombre', dataIndex: 'name' },

@@ -6,6 +6,7 @@ export default function MovementTable({ data }) {
             title={() => 'Movimientos'}
             dataSource={data}
             rowKey="_id"
+            scroll={{ x: 'max-content' }}
             columns={[
                 { title: 'Tipo', dataIndex: 'type' },
                 { title: 'Cantidad', dataIndex: 'quantity' },
