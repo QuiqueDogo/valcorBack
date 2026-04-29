@@ -5,7 +5,7 @@ export default function ReportTable({ data }) {
         <Table
             title={() => 'Reporte'}
             dataSource={data}
-            rowKey={(record) => `${record.type}-${record.branch}`}
+            rowKey='idUnique'
             scroll={{ x: 'max-content' }}
             columns={[
                 {
@@ -15,6 +15,10 @@ export default function ReportTable({ data }) {
                 {
                     title: 'Sucursal',
                     render: (row) => row.branch || 'N/A'
+                },
+                {
+                    title: 'Fecha Creacion',
+                    render: (row) => row.date
                 },
                 {
                     title: 'Total',

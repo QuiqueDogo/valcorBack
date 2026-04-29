@@ -117,12 +117,12 @@ export default function MovementModal({ open, onClose, onSubmit }) {
                                 if (type === 'TRANSFER') {
                                     const toBranchId = form.getFieldValue('toBranchId')
                                     if (value && fromBranchId && toBranchId && fromBranchId === toBranchId) {
-                                        return message.error('No puedes transferir a la misma sucursal')
+                                        return Promise.reject('No puedes transferir a la misma sucursal')
                                     }
                                 }
 
                                 if ((type === 'OUT' || type === 'TRANSFER') && value > availableStock) {
-                                    return message.error('No hay stock suficiente en la sucursal')
+                                    return Promise.reject('No hay stock suficiente en la sucursal')
                                 }
 
                                 return Promise.resolve()

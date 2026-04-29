@@ -51,7 +51,7 @@ export default function LoginPage() {
                 }}
             >
                 <div style={{ textAlign: 'center', marginBottom: 24 }}>
-                    <Title level={3} style={{ margin: 0, color: '#1677ff' }}>StockFlow</Title>
+                    <Title level={3} style={{ margin: 0, color: '#1677ff' }}>Inventario </Title>
                     <Text type="secondary">Inicia sesión para gestionar tu inventario</Text>
                 </div>
 
@@ -94,7 +94,7 @@ export default function LoginPage() {
 
                 <div style={{ textAlign: 'center', marginTop: 16 }}>
                     <Text type="secondary" style={{ fontSize: '12px' }}>
-                        © 2024 StockFlow. Todos los derechos reservados.
+                        © 2024 Inventario. Todos los derechos reservados a quien quiera usarlos.
                     </Text>
                 </div>
             </Card>

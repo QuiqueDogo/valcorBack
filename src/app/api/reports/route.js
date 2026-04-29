@@ -26,6 +26,13 @@ export async function GET(req) {
 
         {
             $addFields: {
+                createdAt: {
+                    $dateToString: {
+                        format: "%Y-%m-%d %H:%M:%S",
+                        date: "$createdAt"
+                    }
+                },
+                idUnique: "$_id",
                 branch: {
                     $cond: [
                         { $eq: ['$type', 'IN'] },
@@ -40,9 +47,11 @@ export async function GET(req) {
             $group: {
                 _id: {
                     type: '$type',
-                    branch: '$branch'
+                    branch: '$branch',
+                    date: '$createdAt',
+                    idUnique: '$idUnique',
                 },
-                total: { $sum: '$quantity' }
+                total: { $sum: '$quantity' },
             }
         },
 
@@ -67,6 +76,8 @@ export async function GET(req) {
                 _id: 0,
                 type: '$_id.type',
                 branch: '$branch.name',
+                date: '$_id.date',
+                idUnique: '$_id.idUnique',
                 total: 1
             }
         }

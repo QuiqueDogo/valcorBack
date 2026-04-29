@@ -56,27 +56,42 @@ export default function DashboardLayout({ children }) {
                 collapsed={collapsed}
                 trigger={null}
             >
-                <div style={{
-                    height: 32,
-                    margin: 16,
-                    background: 'rgba(255, 255, 255, 0.2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#fff',
-                    fontWeight: 'bold',
-                    borderRadius: 4
-                }}>
-                    StockFlow
-                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                    <div style={{
+                        height: 32,
+                        margin: 16,
+                        background: 'rgba(255, 255, 255, 0.2)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        borderRadius: 4
+                    }}>
+                        Inventario
+                    </div>
 
-                <Menu
-                    theme="dark"
-                    mode="inline"
-                    selectedKeys={[pathname]}
-                    items={items}
-                    onClick={({ key }) => router.push(key)}
-                />
+                    <Menu
+                        theme="dark"
+                        mode="inline"
+                        selectedKeys={[pathname]}
+                        items={items}
+                        onClick={({ key }) => router.push(key)}
+                    />
+
+                    <div style={{ marginTop: 'auto', padding: '16px' }}>
+                        <Button
+                            type='primary'
+                            block
+                            onClick={() => {
+                                localStorage.removeItem('token')
+                                window.location.href = '/login'
+                            }}
+                        >
+                            Cerrar sesión
+                        </Button>
+                    </div>
+                </div>
             </Sider>
 
             <Layout>

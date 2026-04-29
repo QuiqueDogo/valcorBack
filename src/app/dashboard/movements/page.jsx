@@ -12,7 +12,12 @@ export default function MovementsPage() {
 
 
     const handleCreate = async (values) => {
+
         try {
+            if (values.quantity <= 0) {
+                message.warning('La cantidad debe ser mayor a 0')
+                return
+            }
             const data = await apiFetch('/api/movements', {
                 method: 'POST',
                 body: JSON.stringify(values)

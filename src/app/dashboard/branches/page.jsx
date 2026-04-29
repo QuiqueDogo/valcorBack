@@ -26,8 +26,8 @@ export default function BranchesPage() {
                 body: JSON.stringify(values)
             })
 
-            if (data && data.message) {
-                message.success(data.message)
+            if (data) {
+                message.success("Sucursal creada exitosamente")
             }
         } catch (error) {
             console.error(error)
