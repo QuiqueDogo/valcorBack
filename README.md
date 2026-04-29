@@ -1,10 +1,10 @@
 
-## 🚀 Demo
+##  Demo
 
-👉 Frontend (Vercel):  
+ Frontend (Vercel):  
 https://valcor-back.vercel.app/login
 
-👉 Repositorio:  
+ Repositorio:  
 https://github.com/QuiqueDogo/valcorBack
 
 ---
@@ -29,9 +29,7 @@ y ejecutar el siguiente comando:
 npm run dev
 ```
 
-## Deploy on Vercel
 
-[Inventario](https://valcor-back.vercel.app)
 
 ## Credenciales
 
