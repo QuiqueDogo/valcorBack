@@ -20,7 +20,7 @@ const stockSchema = new mongoose.Schema(
     { timestamps: true }
 )
 
-// 🔥 evita duplicados (muy importante)
+
 stockSchema.index({ productId: 1, branchId: 1 }, { unique: true })
 
 export default mongoose.models.Stock ||

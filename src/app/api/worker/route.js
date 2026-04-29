@@ -3,5 +3,5 @@ import { processMovements } from '@/lib/movementProcessor'
 
 export async function GET() {
     await processMovements()
-    return NextResponse.json({ ok: true })
+    return NextResponse.json({ ok: true, message: 'Movimientos procesados correctamente' })
 }

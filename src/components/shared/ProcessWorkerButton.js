@@ -3,8 +3,8 @@ import { apiFetch } from '@/lib/api'
 
 export default function ProcessWorkerButton({ onDone }) {
     const handleClick = async () => {
-        await apiFetch('/api/worker')
-        message.success('Procesamiento ejecutado')
+        const data = await apiFetch('/api/worker')
+        message.success(data.message)
 
         if (onDone) {
             await onDone()
@@ -13,7 +13,7 @@ export default function ProcessWorkerButton({ onDone }) {
 
     return (
         <Button type="primary" onClick={handleClick}>
-            Procesar movimientos
+            Procesar 10 movimientos
         </Button>
     )
 }

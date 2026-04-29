@@ -36,19 +36,19 @@ export default function ReportsPage() {
         }
     }
 
-    // 🔥 auto fetch cuando cambian fechas
+
     useEffect(() => {
         fetchData()
     }, [range])
 
-    // 🔥 separar por tipo
+
     const inData = data.filter(d => d.type === 'IN')
     const outData = data.filter(d => d.type === 'OUT')
     const transferData = data.filter(d => d.type === 'TRANSFER')
 
     const total = (arr) => arr.reduce((acc, i) => acc + i.total, 0)
 
-    // 🔥 transformar para gráfica
+
     const transformData = (data) => {
         const map = {}
 

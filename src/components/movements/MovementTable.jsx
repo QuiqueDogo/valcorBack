@@ -24,6 +24,10 @@ export default function MovementTable({ data }) {
                     }
                 },
                 {
+                    title: 'Error',
+                    render: (row) => row.error
+                },
+                {
                     title: 'Producto',
                     render: (row) => row.productId?.name
                 }
