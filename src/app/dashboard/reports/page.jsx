@@ -20,8 +20,8 @@ export default function ReportsPage() {
             let url = '/api/reports?status=processed'
 
             if (range?.length === 2) {
-                const from = range[0].toISOString()
-                const to = range[1].toISOString()
+                const from = range[0].format('YYYY-MM-DD')
+                const to = range[1].format('YYYY-MM-DD')
 
                 url += `&from=${from}&to=${to}`
             }

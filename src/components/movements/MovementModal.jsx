@@ -54,6 +54,7 @@ export default function MovementModal({ open, onClose, onSubmit }) {
 
                 <Form.Item name="type" label="Tipo" rules={[{ required: true }]}>
                     <Select
+                        placeholder='Seleccione un tipo'
                         options={[
                             { value: 'IN', label: 'Entrada' },
                             { value: 'OUT', label: 'Salida' },
@@ -64,6 +65,7 @@ export default function MovementModal({ open, onClose, onSubmit }) {
 
                 <Form.Item name="productId" label="Producto" rules={[{ required: true }]}>
                     <Select
+                        placeholder='Seleccione un producto'
                         options={products.map(p => ({
                             value: p._id,
                             label: p.name
@@ -78,6 +80,7 @@ export default function MovementModal({ open, onClose, onSubmit }) {
                         rules={[{ required: type !== 'IN', message: 'Por favor seleccione la sucursal origen' }]}
                     >
                         <Select
+                            placeholder='Seleccione una sucursal'
                             options={branches.map(b => ({
                                 value: b._id,
                                 label: b.name
@@ -100,6 +103,7 @@ export default function MovementModal({ open, onClose, onSubmit }) {
                         rules={[{ required: type !== 'OUT', message: 'Por favor ingrese una sucursal destino' }]}
                     >
                         <Select
+                            placeholder='Seleccione una sucursal'
                             options={branches.map(b => ({
                                 value: b._id,
                                 label: b.name
@@ -130,7 +134,7 @@ export default function MovementModal({ open, onClose, onSubmit }) {
                         }
                     ]}
                 >
-                    <InputNumber style={{ width: '100%' }} />
+                    <InputNumber placeholder='0' style={{ width: '100%' }} />
                 </Form.Item>
 
             </Form>
