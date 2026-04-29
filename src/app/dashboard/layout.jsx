@@ -113,7 +113,7 @@ export default function DashboardLayout({ children }) {
                     minHeight: 280,
                     background: colorBgContainer,
                     borderRadius: 8,
-                    overflow: 'initial'
+                    overflow: 'scroll'
                 }}>
                     {children}
                 </Content>
